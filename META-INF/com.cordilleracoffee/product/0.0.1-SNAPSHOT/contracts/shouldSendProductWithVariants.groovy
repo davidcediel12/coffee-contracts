@@ -1,14 +1,11 @@
 package contracts
 
 import org.springframework.cloud.contract.spec.Contract
-import static org.springframework.cloud.contract.spec.internal.BodyMatchers.*
-
-
 
 Contract.make {
     name("shouldSendProductCreatedEventWithVariant")
     label("product_created_event_variant")
-    description("Sends a ProductCreated event to Kafka")
+    description("Sends a ProductCreated event to Kafka with consumer values")
 
     input {
         triggeredBy("triggerProductWithVariantsCreated()")
@@ -20,41 +17,41 @@ Contract.make {
             header("contentType", applicationJson())
         }
         body(
-                id: anyNumber(),
-                sellerId: anyNonBlankString(),
-                name: anyNonBlankString(),
-                description: anyNonBlankString(),
-                status: anyOf("AVAILABLE", "HIDDEN", "OUT_OF_STOCK"),
-                categoryId: anyNumber(),
+                id: anyPositiveInt(),
+                sellerId: "seller-001",
+                name: "Coffee Maker",
+                description: "High-quality coffee maker",
+                status: "AVAILABLE",
+                categoryId: 678,
                 images: [
                         [
-                                id          : anyNumber(),
-                                name        : anyNonBlankString(),
-                                url         : anyUrl(),
-                                isPrimary   : anyBoolean(),
-                                displayOrder: anyNumber()
+                                id          : 1,
+                                name        : "coffee-maker-main",
+                                url         : "https://example.com/images/coffee-maker-main.jpg",
+                                isPrimary   : true,
+                                displayOrder: 1
                         ]
                 ],
                 variants: [
                         [
-                                name         : anyNonBlankString(),
-                                description  : anyNonBlankString(),
-                                stock        : [amount: anyPositiveInt()],
-                                basePrice    : [amount: anyNumber(), currency: anyAlphaUnicode()],
-                                isPrimary    : anyBoolean(),
-                                sku          : [sku: anyNonBlankString()],
+                                name         : "Black Edition",
+                                description  : "Premium coffee maker in black color",
+                                stock        : [amount: 100],
+                                basePrice    : [amount: 199.99, currency: "USD"],
+                                isPrimary    : true,
+                                sku          : [sku: "CM-BLK-001"],
                                 variantImages: [
                                         [
-                                                id          : anyNumber(),
-                                                name        : anyNonBlankString(),
-                                                url         : anyUrl(),
-                                                isPrimary   : anyBoolean(),
-                                                displayOrder: anyNumber()
+                                                id          : 2,
+                                                name        : "coffee-maker-black",
+                                                url         : "https://example.com/images/coffee-maker-black.jpg",
+                                                isPrimary   : true,
+                                                displayOrder: 1
                                         ]
                                 ]
                         ]
                 ],
-                tagIds: [$(anyNumber())]
+                tagIds: [101, 205, 307]
         )
     }
 }
